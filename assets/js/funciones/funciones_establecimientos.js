@@ -1,22 +1,29 @@
 $(document).ready(function() {
     generar2();
+    $('.select').select2();
     $('#formulario').validate({
         rules: {
             nombre: {
                 required: true,
             },
-            descripcion: {
+            id_usuario: {
+                required: true,
+            },
+            id_categoria: {
                 required: true,
             },
         },
         messages: {
-            nombre: "Por favor ingrese el nombre de la Categoria!.",
-            descripcion: "Por favor ingrese la descripcion de la Categoria!.",
+            nombre: "Por favor ingrese el Nombre del Establecimiento!.",
+            id_usuario: "Por favor seleccione el Usuario Encargado del Establecimiento!.",
+            id_categoria: "Por favor seleccione la Categoria del Establecimiento!.",
         },
         submitHandler: function(form) {
             senddata();
         }
     });
+
+
 });
 
 function mayus(e) {
@@ -25,29 +32,27 @@ function mayus(e) {
     $("#nombre").val(nombre);
 }
 
-function mayus2(e) {
-    var v = e.value;
-    var descripcion = v.toUpperCase();
-    $("#descripcion").val(descripcion);
-}
-
 
 function senddata() {
     var base_url = $("#base_url").val();
     var nombre = $("#nombre").val();
-    var descripcion = $("#descripcion").val();
+    var id_usuario = $("#id_usuario").val();
+    var urlx = $("#url").val();
+    var id_categoria = $("#id_categoria").val();
     var process = $('#process').val();
     if (process == 'insertar') {
-        var id_categoria = 0;
-        var url = base_url + '/catalogos/insertar_categoria';
+        var id_establecimiento = 0;
+        var url = base_url + '/establecimientos/insertar_establecimiento';
     }
     if (process == 'editar') {
-        var id_categoria = $('#id_categoria').val();
-        var url = base_url + '/catalogos/modificar_categoria';
+        var id_establecimiento = $('#id_establecimiento').val();
+        var url = base_url + '/establecimientos/modificar_establecimiento';
     }
     var datas_string = "nombre=" + nombre;
-    datas_string += "&descripcion=" + descripcion;
+    datas_string += "&id_usuario=" + id_usuario;
+    datas_string += "&url=" + urlx;
     datas_string += "&id_categoria=" + id_categoria;
+    datas_string += "&id_establecimiento=" + id_establecimiento;
     $.ajax({
         type: 'POST',
         url: url,
@@ -66,13 +71,13 @@ function senddata() {
 
 function reload1() {
     let base_url = $("#base_url").val();
-    location.href = base_url + '/catalogos/admin_categorias';
+    location.href = base_url + '/establecimientos/';
 }
 
 function deleted(id) {
     var base_url = $("#base_url").val();
     swal({
-            title: "¿Esta seguro que desea eliminar esta categoria?",
+            title: "¿Esta seguro que desea eliminar este establecimiento?",
             text: "Usted no podra deshacer este cambio!!",
             type: "warning",
             showCancelButton: true,
@@ -84,7 +89,7 @@ function deleted(id) {
         function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "/catalogos/eliminar_categoria/" + id,
+                url: base_url + "/establecimientos/eliminar_establecimiento/" + id,
                 dataType: "JSON",
                 success: function(datax) {
                     if (datax.typeinfo == "success" || datax.typeinfo == "Success") {
@@ -99,7 +104,7 @@ function deleted(id) {
 function desactivar(id) {
     var base_url = $("#base_url").val();
     swal({
-            title: "¿Esta seguro que desea desactivar esta categoria?",
+            title: "¿Esta seguro que desea desactivar este establecimiento?",
             text: "Hagalo unicamente si esta seguro!",
             type: "warning",
             showCancelButton: true,
@@ -111,7 +116,7 @@ function desactivar(id) {
         function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "/catalogos/desactivar_categoria/" + id,
+                url: base_url + "/establecimientos/desactivar_establecimiento/" + id,
                 dataType: "JSON",
                 success: function(datax) {
                     if (datax.typeinfo == "success" || datax.typeinfo == "Success") {
@@ -126,7 +131,7 @@ function desactivar(id) {
 function activar(id) {
     var base_url = $("#base_url").val();
     swal({
-            title: "¿Esta seguro que desea activar esta categoria?",
+            title: "¿Esta seguro que desea activar este establecimiento?",
             text: "Hagalo unicamente si esta seguro!",
             type: "warning",
             showCancelButton: true,
@@ -138,7 +143,7 @@ function activar(id) {
         function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "/catalogos/activar_categoria/" + id,
+                url: base_url + "/establecimientos/activar_establecimiento/" + id,
                 dataType: "JSON",
                 success: function(datax) {
                     if (datax.typeinfo == "success" || datax.typeinfo == "Success") {
@@ -151,14 +156,15 @@ function activar(id) {
 }
 
 
+
 $(document).on("click", ".desactivar", function() {
-    desactivar($(this).attr("id_categoria"));
+    desactivar($(this).attr("id_establecimiento"));
 });
 $(document).on("click", ".activar", function() {
-    activar($(this).attr("id_categoria"));
+    activar($(this).attr("id_establecimiento"));
 });
 $(document).on("click", ".elim", function() {
-    deleted($(this).attr("id_categoria"));
+    deleted($(this).attr("id_establecimiento"));
 });
 $(function() {
     /*binding event click for button in modal form
@@ -182,7 +188,7 @@ function generar2() {
         "autoWidth": false,
         "order": [0, 'desc'],
         'ajax': {
-            'url': base_url + "/catalogos/getCategorias",
+            'url': base_url + "/establecimientos/getEstablecimientos",
             'data': function(data) {
                 return {
                     data: data,
@@ -190,9 +196,10 @@ function generar2() {
             },
         },
         'columns': [
-            { data: 'id_categoria' },
+            { data: 'id_establecimiento' },
             { data: 'nombre' },
-            { data: 'descripcion' },
+            { data: 'nombre_usuario' },
+            { data: 'nombre_categoria' },
             { data: 'activo' },
             { data: 'boton' },
         ]

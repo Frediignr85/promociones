@@ -2,12 +2,12 @@
     <div class="col-lg-12" style="margin-top: 1%;">
         <div class="panel panel-default">
             <div class="panel-heading text-center">
-                <h3 class='text-primary'><i class="fa fa-user"></i> Registro de Categorias</h3> (Los campos marcados con <span style="color:red;">*</span> son requeridos)
+                <h3 class='text-primary'><i class="fa fa-user"></i> Registro de Establecimiento</h3> (Los campos marcados con <span style="color:red;">*</span> son requeridos)
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-lg-12 col-sm-12 col-md-12 col-xl-12 col-12">
-                        <form style="justify-content:right;" action="<?php echo base_url('/catalogos/store_perfil');?>" name="ajax_form"
+                    <div class="col-lg-12">
+                        <form style="justify-content:right;" action="<?php echo base_url('/establecimientos/store_perfil');?>" name="ajax_form"
                             id="ajax_form" method="post" accept-charset="utf-8" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="row">
@@ -41,23 +41,51 @@
                                 <div class="form-group">
                                     <button type="submit" id="send_form_perfil" class="btn btn-success" style="display: none;">Submit</button>
                                 </div>
+                            </div>
                         </form>
                     </div>
-                    <div class="col-lg-12 col-sm-12 col-md-12 col-xl-12 col-12">
+                    <div class="col-lg-12">
                         <form id="formulario" autocomplete="off">
                             <div class="row">
-                                <div class="col-lg-6 col-sm-6 col-md-6 col-xl-6 col-6">
+                                <div class="col-lg-12 col-sm-12 col-md-12 col-xl-12 col-12">
                                     <div class="form-group has-info single-line rounded-top" >
                                         <label class="control-label"><span style="color:red;">* </span> Nombre: </label>
-                                        <input type="text" class="form-control" name="nombre" id="nombre" onkeyup="mayus(this)" placeholder="Ingrese el Nombre de la Categoria">
+                                        <input type="text" class="form-control" name="nombre" id="nombre" onkeyup="mayus(this)" placeholder="Ingrese el Nombre Corto del Establecimiento">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-sm-12 col-md-12 col-xl-12 col-12">
+                                    <div class="form-group has-info single-line rounded-top" >
+                                        <label class="control-label"> URL pagina Web: </label>
+                                        <input type="text" class="form-control" name="url" id="url" placeholder="Ingrese la URL de la Pagina Web del Establecimiento">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-sm-6 col-md-6 col-xl-6 col-6">
                                     <div class="form-group has-info single-line rounded-top" >
-                                        <label class="control-label"><span style="color:red;">* </span> Descripcion: </label>
-                                        <input type="text" class="form-control" name="descripcion" id="descripcion" onkeyup="mayus2(this)" placeholder="Ingrese la Descripcion de la Categoria">
+                                        <label class="control-label"><span style="color:red;">* </span> Encargado: </label>
+                                        <select class="form-control select" name="id_usuario" id="id_usuario" style="width:100%;">
+                                            <option value="">Seleccione el Encargado</option>
+                                            <?php
+                                                foreach ($array_usuarios as $key => $value) {
+                                                    echo "<option value='".$value["id_usuario"]."'>".$value["nombre"]."</option>";
+                                                }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
+                                <div class="col-lg-6 col-sm-6 col-md-6 col-xl-6 col-6">
+                                    <div class="form-group has-info single-line rounded-top" >
+                                        <label class="control-label"><span style="color:red;">* </span> Categoria: </label>
+                                        <select class="form-control select" name="id_categoria" id="id_categoria" style="width:100%;">
+                                            <option value="">Seleccione la Categoria del Establecimiento</option>
+                                            <?php
+                                                foreach ($array_categorias as $key => $value) {
+                                                    echo "<option value='".$value["id_categoria"]."'>".$value["nombre"]."</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-lg-5 col-sm-5 col-md-5 col-xl-5 col-5 text-center">
@@ -78,7 +106,6 @@
                             </div>
                         </form>
                     </div>
-                    
                 </div>
                 <script>
                     function readURL(input, id) {

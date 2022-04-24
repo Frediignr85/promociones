@@ -1,6 +1,6 @@
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	<h4 class="modal-title">Datos de Tipo de Usuario</h4>
+	<h4 class="modal-title">Datos del Tipo de Usuario</h4>
 </div>
 <div class="modal-body">
 	<div class="wrapper wrapper-content  animated fadeInRight">

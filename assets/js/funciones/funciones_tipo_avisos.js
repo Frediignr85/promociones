@@ -8,10 +8,14 @@ $(document).ready(function() {
             descripcion: {
                 required: true,
             },
+            color: {
+                required: true,
+            },
         },
         messages: {
-            nombre: "Por favor ingrese el nombre de la Categoria!.",
-            descripcion: "Por favor ingrese la descripcion de la Categoria!.",
+            nombre: "Por favor ingrese el nombre del tipo de aviso!.",
+            descripcion: "Por favor ingrese la descripcion del tipo de aviso!.",
+            color: "Por favor ingrese el color representativo del tipo de aviso!.",
         },
         submitHandler: function(form) {
             senddata();
@@ -36,18 +40,20 @@ function senddata() {
     var base_url = $("#base_url").val();
     var nombre = $("#nombre").val();
     var descripcion = $("#descripcion").val();
+    var color = $("#color").val();
     var process = $('#process').val();
     if (process == 'insertar') {
-        var id_categoria = 0;
-        var url = base_url + '/catalogos/insertar_categoria';
+        var id_tipo_aviso = 0;
+        var url = base_url + '/catalogos/insertar_tipo_aviso';
     }
     if (process == 'editar') {
-        var id_categoria = $('#id_categoria').val();
-        var url = base_url + '/catalogos/modificar_categoria';
+        var id_tipo_aviso = $('#id_tipo_aviso').val();
+        var url = base_url + '/catalogos/modificar_tipo_aviso';
     }
     var datas_string = "nombre=" + nombre;
     datas_string += "&descripcion=" + descripcion;
-    datas_string += "&id_categoria=" + id_categoria;
+    datas_string += "&color=" + color;
+    datas_string += "&id_tipo_aviso=" + id_tipo_aviso;
     $.ajax({
         type: 'POST',
         url: url,
@@ -56,9 +62,7 @@ function senddata() {
         success: function(datax) {
             display_notify(datax.typeinfo, datax.msg);
             if (datax.typeinfo == "Success") {
-                $("#id_imagen_perfil").val(datax.id_categoria);
-                $("#id_imagen_banner").val(datax.id_categoria);
-                $("#send_form_perfil").click();
+                setInterval("reload1();", 1500);
             }
         }
     });
@@ -66,13 +70,13 @@ function senddata() {
 
 function reload1() {
     let base_url = $("#base_url").val();
-    location.href = base_url + '/catalogos/admin_categorias';
+    location.href = base_url + '/catalogos/admin_tipo_avisos';
 }
 
 function deleted(id) {
     var base_url = $("#base_url").val();
     swal({
-            title: "¿Esta seguro que desea eliminar esta categoria?",
+            title: "¿Esta seguro que desea eliminar este tipo de aviso?",
             text: "Usted no podra deshacer este cambio!!",
             type: "warning",
             showCancelButton: true,
@@ -84,7 +88,7 @@ function deleted(id) {
         function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "/catalogos/eliminar_categoria/" + id,
+                url: base_url + "/catalogos/eliminar_tipo_aviso/" + id,
                 dataType: "JSON",
                 success: function(datax) {
                     if (datax.typeinfo == "success" || datax.typeinfo == "Success") {
@@ -99,7 +103,7 @@ function deleted(id) {
 function desactivar(id) {
     var base_url = $("#base_url").val();
     swal({
-            title: "¿Esta seguro que desea desactivar esta categoria?",
+            title: "¿Esta seguro que desea desactivar este tipo de aviso?",
             text: "Hagalo unicamente si esta seguro!",
             type: "warning",
             showCancelButton: true,
@@ -111,7 +115,7 @@ function desactivar(id) {
         function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "/catalogos/desactivar_categoria/" + id,
+                url: base_url + "/catalogos/desactivar_tipo_aviso/" + id,
                 dataType: "JSON",
                 success: function(datax) {
                     if (datax.typeinfo == "success" || datax.typeinfo == "Success") {
@@ -126,7 +130,7 @@ function desactivar(id) {
 function activar(id) {
     var base_url = $("#base_url").val();
     swal({
-            title: "¿Esta seguro que desea activar esta categoria?",
+            title: "¿Esta seguro que desea activar este tipo de aviso?",
             text: "Hagalo unicamente si esta seguro!",
             type: "warning",
             showCancelButton: true,
@@ -138,7 +142,7 @@ function activar(id) {
         function() {
             $.ajax({
                 type: "POST",
-                url: base_url + "/catalogos/activar_categoria/" + id,
+                url: base_url + "/catalogos/activar_tipo_aviso/" + id,
                 dataType: "JSON",
                 success: function(datax) {
                     if (datax.typeinfo == "success" || datax.typeinfo == "Success") {
@@ -152,13 +156,13 @@ function activar(id) {
 
 
 $(document).on("click", ".desactivar", function() {
-    desactivar($(this).attr("id_categoria"));
+    desactivar($(this).attr("id_tipo_aviso"));
 });
 $(document).on("click", ".activar", function() {
-    activar($(this).attr("id_categoria"));
+    activar($(this).attr("id_tipo_aviso"));
 });
 $(document).on("click", ".elim", function() {
-    deleted($(this).attr("id_categoria"));
+    deleted($(this).attr("id_tipo_aviso"));
 });
 $(function() {
     /*binding event click for button in modal form
@@ -182,7 +186,7 @@ function generar2() {
         "autoWidth": false,
         "order": [0, 'desc'],
         'ajax': {
-            'url': base_url + "/catalogos/getCategorias",
+            'url': base_url + "/catalogos/getTipoAviso",
             'data': function(data) {
                 return {
                     data: data,
@@ -190,9 +194,10 @@ function generar2() {
             },
         },
         'columns': [
-            { data: 'id_categoria' },
+            { data: 'id_tipo_aviso' },
             { data: 'nombre' },
             { data: 'descripcion' },
+            { data: 'color' },
             { data: 'activo' },
             { data: 'boton' },
         ]
