@@ -10317,3 +10317,21 @@ hr.style2 {
 #border_prueba {
     border-radius: 30px;
 }
+
+tr>.prev {
+    background-image: none !important;
+}
+
+tr>.next {
+    background-image: none !important;
+}
+
+ul>.prev {
+    background: none !important;
+    display: contents !important;
+}
+
+ul>.next {
+    background: none !important;
+    display: contents !important;
+}

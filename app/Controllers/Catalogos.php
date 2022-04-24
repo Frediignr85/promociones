@@ -4,6 +4,7 @@ use App\Controllers\BaseController;
 use App\Models\ModeloCategorias;
 use App\Models\ModeloPrincipal;
 use App\Models\ModeloTipoAviso;
+use App\Models\ModeloTipoContacto;
 use App\Models\ModeloTipoPromociones;
 use App\Models\ModeloTipoUsuarioModulo;
 use App\Models\ModeloTipoUsuarios;
@@ -19,6 +20,8 @@ class Catalogos extends BaseController{
         $this->modelo_categoria = new ModeloCategorias();
         $this->modelo_tipo_usuario = new ModeloTipoUsuarios();
         $this->modelo_tipo_usuario_modulo = new ModeloTipoUsuarioModulo();
+        $this->modelo_tipo_promocion = new ModeloTipoPromociones();
+        $this->modelo_tipo_contacto = new ModeloTipoContacto();
         /* ACA INICIALIZO LA INSTANCIA PARA USAR LAS SESIONES */
         $this->session = session(); 
         /* ACA LLAMO LAS VARIABLES DE SESION */
@@ -29,7 +32,262 @@ class Catalogos extends BaseController{
     }
     
 
-    /* FUNCION PARA LISTAR TODOS LOS TIPOS DE AVISOS */
+    /* FUNCION PARA LISTAR TODOS LOS TIPOS DE CONTACTO */
+    public function admin_tipo_contactos(){
+        /* MODELO PRINCIPAL EN DONDE SE RECUPERAN DATOS GENERALES DEL SISTEMA */
+        $modelo_principal = $this->modelo_principal;
+        /* ACA MANDO A LLAMAR EL MENU */
+        $menu = $modelo_principal->menu($this->id_usuario,$this->admin);
+        $datos['menu'] = $menu;
+        $filename = "catalogos/agregar_tipo_contacto";
+        $permiso = $this->modelo_principal->comprobar_permiso($filename,$this->id_usuario,$this->admin);
+        if($permiso){
+            $boton_agregar =    "<div class='ibox-title'>";
+            $boton_agregar.=    "<a href='agregar_tipo_contacto' class='btn btn-primary' role='button'><i class='fa fa-plus icon-large'></i> Agregar Tipo de Contacto</a>";
+            $boton_agregar.=    "</div>";
+        }
+        $datos_admin['btn_add'] = $boton_agregar;
+        echo view('template/header');
+        echo view('template/main_menu',$datos);
+        echo view('catalogos/admin_tipo_contactos',$datos_admin); 
+        $datos3['url'] = '<script src="'.base_url("").'/assets/js/funciones/funciones_tipo_contactos.js" ></script>';
+        echo view('template/footer',$datos3);
+    }
+
+    /* FUNCION PARA LLAMAR A LA VISTA PARA PODER AGREGAR UN NUEVO TIPO DE CONTACTO */
+    public function agregar_tipo_contacto(){
+        /* MODELO PRINCIPAL EN DONDE SE RECUPERAN DATOS GENERALES DEL SISTEMA */
+        $modelo_principal = $this->modelo_principal;
+        /* ACA MANDO A LLAMAR EL MENU */
+        $menu = $modelo_principal->menu($this->id_usuario,$this->admin);
+        $datos['menu'] = $menu;
+        /*ACA IMPRIMO LAS VISTAS */
+        echo view('template/header');
+        echo view('template/main_menu',$datos);
+        echo view('catalogos/agregar_tipo_contacto'); 
+        $datos3['url'] = '<script src="'.base_url("").'/assets/js/funciones/funciones_tipo_contactos.js" ></script>';
+        echo view('template/footer',$datos3);
+    }
+    
+    /* FUNCION PARA INSERTAR UN NUEVO TIPO DE CONTACTO */
+    public function insertar_tipo_contacto(){
+        $nombres = addslashes($this->request->getPost('nombre'));
+        $descripcion = addslashes($this->request->getPost('descripcion'));
+        $id = $this->modelo_tipo_contacto->insert([
+            'nombre' => $nombres,
+            'descripcion' => $descripcion,
+            'activo' =>'1',
+        ]);
+        if($this->modelo_tipo_contacto->get($id) != null){
+            $xdatos['typeinfo'] = "Success";
+            $xdatos['msg'] = "Tipo de Contacto Registrado con Exito!.";
+        }
+        else{
+            $xdatos['typeinfo'] = "Error";
+            $xdatos['msg'] = "No se pudo registrar el Tipo de Contacto, intente mas tarde!.";
+        }
+        echo json_encode($xdatos);
+    }
+    
+    /* FUNCION PARA LLAMAR A LA VISTA PARA PODER EDITAR UN TIPO DE CONTACTO */
+    public function editar_tipo_contacto($id_tipo_contacto){
+        /* MODELO PRINCIPAL EN DONDE SE RECUPERAN DATOS GENERALES DEL SISTEMA */
+        $modelo_principal = $this->modelo_principal;
+        /* ACA MANDO A LLAMAR EL MENU */
+        $menu = $modelo_principal->menu($this->id_usuario,$this->admin);
+        $datos['menu'] = $menu;
+        
+        $array_tipo_contacto = $this->modelo_tipo_contacto->get($id_tipo_contacto);
+        $datos2['array_tipo_contacto'] = $array_tipo_contacto;
+        $datos2['id_tipo_contacto'] = $id_tipo_contacto;
+        /*ACA IMPRIMO LAS VISTAS */
+        echo view('template/header');
+        echo view('template/main_menu',$datos);
+        echo view('catalogos/editar_tipo_contacto',$datos2); 
+        $datos3['url'] = '<script src="'.base_url("").'/assets/js/funciones/funciones_tipo_contactos.js" ></script>';
+        echo view('template/footer',$datos3);
+    }
+    
+    /* FUNCION PARA MODIFICAR UN TIPO DE CONTACTO */
+    public function modificar_tipo_contacto(){
+        $nombre = addslashes($this->request->getPost('nombre'));
+        $descripcion = addslashes($this->request->getPost('descripcion'));
+        $id_tipo_contacto = addslashes($this->request->getPost('id_tipo_contacto'));
+
+        $this->modelo_tipo_contacto->update($id_tipo_contacto,[
+            'nombre' => $nombre,
+            'descripcion' => $descripcion,
+        ]);
+        if($this->modelo_tipo_contacto->get($id_tipo_contacto) != null){
+            $xdatos['typeinfo'] = "Success";
+            $xdatos['msg'] = "Tipo de Contacto Editado con Exito!.";
+        }
+        else{
+            $xdatos['typeinfo'] = "Error";
+            $xdatos['msg'] = "No se pudo editar el Tipo de Contacto, intente mas tarde!.";
+        }
+        echo json_encode($xdatos);
+    }
+
+    /* FUNCION PARA LLAMAR A LA VISTA PARA PODER VER LA INFORMACION DE UN TIPO DE CONTACTO */
+    public function ver_tipo_contacto($id_tipo_contacto){
+        $array_tipo_contacto = $this->modelo_tipo_contacto->get($id_tipo_contacto);
+        $datos2['array_tipo_contacto'] = $array_tipo_contacto;
+        echo view('catalogos/ver_tipo_contacto',$datos2); 
+    }
+
+    /* FUNCION PARA ELIMINAR UN TIPO DE CONTACTO */
+    public function eliminar_tipo_contacto($id_tipo_contacto){
+        $eliminar = $this->modelo_tipo_contacto->delete($id_tipo_contacto);
+        if($eliminar){
+            $xdatos['typeinfo'] = "Success";
+            $xdatos['msg'] = "Tipo de Contacto eliminado con exito!";
+        }
+        else{
+            $xdatos['typeinfo'] = "Error";
+            $xdatos['msg'] = "No se puede eliminar el Tipo de Contacto, intentar mas tarde!";
+        }
+        echo json_encode($xdatos);
+    }
+    /* FUNCION PARA ACTIVAR UN TIPO DE CONTACTO */
+    public function activar_tipo_contacto($id_tipo_contacto){
+        $this->modelo_tipo_contacto->update($id_tipo_contacto,[
+            'activo' =>'1',
+        ]);
+        if($this->modelo_tipo_contacto->get($id_tipo_contacto) != null){
+            $xdatos['typeinfo'] = "Success";
+            $xdatos['msg'] = "Tipo de Contacto Activado con Exito!.";
+        }
+        else{
+            $xdatos['typeinfo'] = "Error";
+            $xdatos['msg'] = "No se pudo activar el Tipo de Contacto, intente mas tarde!.";
+        }
+        echo json_encode($xdatos);
+    }
+    /* FUNCION PARA DESACTIVAR UN TIPO DE CONTACTO */
+    public function desactivar_tipo_contacto($id_tipo_contacto){
+        $this->modelo_tipo_contacto->update($id_tipo_contacto,[
+            'activo' =>'0',
+        ]);
+        if($this->modelo_tipo_contacto->get($id_tipo_contacto) != null){
+            $xdatos['typeinfo'] = "Success";
+            $xdatos['msg'] = "Tipo de Contacto Desactivado con Exito!.";
+        }
+        else{
+            $xdatos['typeinfo'] = "Error";
+            $xdatos['msg'] = "No se pudo desactivar el Tipo de Contacto, intente mas tarde!.";
+        }
+        echo json_encode($xdatos);
+    }
+
+    /* FUNCION PARA TRAER LOS TIPOS DE CONTACTO AL DATATABLE */
+    public function getTipoContacto(){
+        $request = service('request');
+        $postData = $request->getPost();
+        $dtpostData = $postData['data'];
+        $response = array();
+        ## Read value
+        $draw = $dtpostData['draw'];
+        $start = $dtpostData['start'];
+        $rowperpage = $dtpostData['length']; // Rows display per page
+        $columnIndex = $dtpostData['order'][0]['column']; // Column index
+        $columnName = $dtpostData['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $dtpostData['order'][0]['dir']; // asc or desc
+        $searchValue = $dtpostData['search']['value']; // Search value
+        ## Total number of records without filtering
+        $tipo_promocion = $this->modelo_tipo_contacto;
+        $totalRecords = $tipo_promocion
+                ->select('id_tipo_contacto')
+                ->where('deleted_at',null)
+                ->countAllResults();
+        ## Total number of records with filtering
+        $totalRecordwithFilter = $tipo_promocion->select("*")
+                ->groupStart()
+                    ->orLike('tbltipo_contacto.nombre', $searchValue)
+                    ->orLike('tbltipo_contacto.descripcion', $searchValue)
+                ->groupEnd()
+                ->groupStart()
+                ->where('tbltipo_contacto.deleted_at',null)
+                ->groupEnd()
+                ->countAllResults();
+        ## Fetch records
+        $records = $tipo_promocion->select("*")
+                ->groupStart()
+                    ->orLike('tbltipo_contacto.nombre', $searchValue)
+                    ->orLike('tbltipo_contacto.descripcion', $searchValue)
+                ->groupEnd()
+                ->groupStart()
+                ->where('tbltipo_contacto.deleted_at',null)
+                ->groupEnd()
+                ->orderBy($columnName,$columnSortOrder)
+                ->findAll($rowperpage, $start);
+        $data = array();
+        foreach($records as $record ){
+            $id_tipo_contacto = $record['id_tipo_contacto'];
+            $nombre = $record['nombre'];
+            $descripcion = $record['descripcion'];
+            $activo = $record['activo'];
+            $label_activo = "";
+            $menudrop = "";
+            $menudrop.="
+            <div class='btn-group'>
+            <button class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>
+            <i class=\"fa	fa-gears (alias)\"></i> Accion
+            <span class='caret'></span>
+            </button>
+            <ul class='dropdown-menu'>";
+            if ($record["activo"]==1) {
+                $filename = "catalogos/editar_tipo_contacto";
+                $permiso = $this->modelo_principal->comprobar_permiso($filename,$this->id_usuario,$this->admin);
+                if($permiso)
+                {
+                    $menudrop.="<li><a href=\"editar_tipo_contacto/".$id_tipo_contacto."\"><i class='fa fa-edit (alias)'></i> Editar</a></li>";
+                }
+                $filename = "catalogos/borrar_tipo_contacto";
+                $permiso = $this->modelo_principal->comprobar_permiso($filename,$this->id_usuario,$this->admin);
+                if($permiso)
+                {
+                    $menudrop.="<li><a id_tipo_contacto='".$id_tipo_contacto."' class='elim'><i class='fa fa-trash (alias)'></i> Eliminar</a></li>";
+                }
+                $filename = "catalogos/ver_tipo_contacto";
+                $permiso = $this->modelo_principal->comprobar_permiso($filename,$this->id_usuario,$this->admin);
+                if($permiso)
+                {
+                    $menudrop.="<li><a data-toggle='modal' href='ver_tipo_contacto/".$id_tipo_contacto."' data-target='#viewModal' data-refresh='true'><i class=\"fa fa-search\"></i> Ver Detalle</a></li>";
+                }
+            }
+            $filename = "catalogos/estado_tipo_contacto";
+            $permiso = $this->modelo_principal->comprobar_permiso($filename,$this->id_usuario,$this->admin);
+            if($permiso)
+            {
+                if ($record["activo"]==1) {
+                    $menudrop.="<li><a id_tipo_contacto='".$id_tipo_contacto."' class='desactivar'><i class='fa fa-eye-slash'></i> Desactivar</a></li>";
+                    $label_activo = "<span class=\"label label-info\">Activo</span>";
+                }else {
+                    $menudrop.="<li><a id_tipo_contacto='".$id_tipo_contacto."' class='activar'><i class='fa fa-eye'></i> Activar</a></li>";
+                    $label_activo = "<span class=\"label label-danger\">Inactivo</span>";
+                }
+            }
+            $menudrop.="</ul>
+            </div>";
+            $data[] = array( 
+                "id_tipo_contacto"=>$record['id_tipo_contacto'],
+                "nombre"=>$nombre,
+                "descripcion"=>$descripcion,
+                "activo"=>$label_activo,
+                "boton" => $menudrop
+            ); 
+        }
+        ## Response
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordwithFilter,
+            "aaData" => $data,
+        );
+        return $this->response->setJSON($response);
+    }
+/* FUNCION PARA LISTAR TODOS LOS TIPOS DE AVISOS */
     public function admin_tipo_avisos(){
         /* MODELO PRINCIPAL EN DONDE SE RECUPERAN DATOS GENERALES DEL SISTEMA */
         $modelo_principal = $this->modelo_principal;

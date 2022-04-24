@@ -49,6 +49,7 @@
 <script src='<?php echo base_url("")."/assets" ?>/js/plugins/typeahead/bootstrap3-typeahead.js'></script>
 <script src="<?php echo base_url("")."/assets" ?>/js/plugins/datapicker/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url("")."/assets" ?>/js/plugins/timepicker/jquery.timepicker.js"></script>
+<script src="<?php echo base_url() ?>/assets/js/plugins/timepicki/timepicki.js"></script>
 <script type="text/javascript" src="<?php echo base_url("")."/assets" ?>/js/plugins/numeric/jquery.numeric.js"></script>
 <script type="text/javascript" src="<?php echo base_url("")."/assets" ?>/js/main.js"></script>
 <?php echo $url; ?>

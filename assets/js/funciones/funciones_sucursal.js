@@ -72,6 +72,19 @@ function senddata() {
         var id_sucursal = $('#id_sucursal').val();
         var url = base_url + '/sucursales/modificar_sucursal';
     }
+    let cuantos = 0;
+    let lista = ""
+    let error_vacio = 0;
+    $("#contactos_table tr").each(function() {
+        var nombre_contacto = $(this).find('.nombre_contacto').html();
+        var id_departamento_contacto = $(this).find('.id_departamento_contacto').html();
+        var id_municipio_contacto = $(this).find('.id_municipio_contacto').html();
+        var direccion_contacto = $(this).find('.direccion_contacto').html();
+        var id_tipo_contacto = $(this).find('.id_tipo_contacto').html();
+        var informacion_tipo_contacto = $(this).find('.informacion_tipo_contacto').html();
+        lista += nombre_contacto + '~~' + id_departamento_contacto + '~~' + id_municipio_contacto + '~~' + direccion_contacto + '~~' + id_tipo_contacto + '~~' + informacion_tipo_contacto + "|";
+        cuantos += 1;
+    });
     var datas_string = "nombre=" + nombre;
     datas_string += "&telefono=" + telefono;
     datas_string += "&direccion=" + direccion;
@@ -79,6 +92,8 @@ function senddata() {
     datas_string += "&id_municipio=" + id_municipio;
     datas_string += "&id_usuario=" + id_usuario;
     datas_string += "&id_establecimiento=" + id_establecimiento;
+    datas_string += "&lista=" + lista;
+    datas_string += "&cuantos=" + cuantos;
     datas_string += "&url=" + url_x;
     datas_string += "&id_sucursal=" + id_sucursal;
     $.ajax({
@@ -262,4 +277,62 @@ $("#id_departamento").change(function() {
             $("#id_municipio").val("");
         }
     })
+});
+$("#id_departamento_contacto").change(function() {
+    let id_departamento_contacto = $(this).val();
+    let base_url = $("#base_url").val();
+    $("#id_municipio_contacto *").remove();
+    $("#select2-id_municipio_contacto-container").text("");
+    var ajaxdata = { "id_departamento": id_departamento_contacto };
+    $.ajax({
+        url: base_url + "/sucursales/cambiar_departamento",
+        type: "POST",
+        data: ajaxdata,
+        success: function(opciones) {
+            $("#select2-id_municipio_contacto-container").text("Seleccione");
+            $("#id_municipio_contacto").html(opciones);
+            $("#id_municipio_contacto").val("");
+        }
+    })
+});
+
+
+/* FUNCION PARA AGREGAR UN NUEVO CONTACTO */
+$("#btn_add_contacto").click(function() {
+    let nombre_contacto = $("#nombre_contacto").val();
+    let id_departamento_contacto = $("#id_departamento_contacto").val();
+    let id_municipio_contacto = $("#id_municipio_contacto").val();
+    let direccion_contacto = $("#direccion_contacto").val();
+    let id_tipo_contacto = $("#id_tipo_contacto").val();
+    let informacion_tipo_contacto = $("#informacion_tipo_contacto").val();
+    if (nombre_contacto == "" || id_departamento_contacto == "" || id_municipio_contacto == "" || direccion_contacto == "" || id_tipo_contacto == "" || informacion_tipo_contacto == "") {
+        display_notify("Warning", "Tiene que completar todos los campos de la informacion del contacto!");
+    } else {
+        var text_departamento = $("#id_departamento_contacto option:selected").html();
+        var text_municipio = $("#id_municipio_contacto option:selected").html();
+        var text_tipo_contacto = $("#id_tipo_contacto option:selected").html();
+        var fila = "<tr class='campo'>";
+        fila += "<td class='nombre_contacto'>" + nombre_contacto + "</td>";
+        fila += "<td class='id_departamento_contacto' hidden>" + id_departamento_contacto + "</td>";
+        fila += "<td>" + text_departamento + "</td>";
+        fila += "<td class='id_municipio_contacto' hidden>" + id_municipio_contacto + "</td>";
+        fila += "<td>" + text_municipio + "</td>";
+        fila += "<td class='direccion_contacto'>" + direccion_contacto + "</td>";
+        fila += "<td class='id_tipo_contacto' hidden>" + id_tipo_contacto + "</td>";
+        fila += "<td>" + text_tipo_contacto + "</td>";
+        fila += "<td class='informacion_tipo_contacto'>" + informacion_tipo_contacto + "</td>";
+        fila += "<td class='delete text-center'><a class='btn Delete'><i class='fa fa-trash'></i></a></td>";
+        $("#contactos_table").append(fila);
+        $("#id_tipo_contacto").val("");
+        $("#id_tipo_contacto").trigger('change');
+        $("#nombre_contacto").val("");
+        $("#direccion_contacto").val("");
+        $("#informacion_tipo_contacto").val("");
+    }
+
+
+});
+
+$(document).on("click", ".Delete", function() {
+    $(this).parents("tr").remove();
 });

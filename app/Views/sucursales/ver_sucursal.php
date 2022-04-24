@@ -99,6 +99,61 @@
             </div>
             
         </div>
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-md-12 col-xl-12 col-12" ><br>
+                <div class=" text-center">
+                    <h3>Contactos</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!--- SEPARADOR DIV --->
+            <div class="col-lg-12 col-sm-12 col-md-12 col-xl-12 col-12">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>NOMBRE</th>
+                            <th>DEPARTAMENTO</th>
+                            <th>MUNICIPIO</th>
+                            <th>DIRECCION</th>
+                            <th>TIPO DE CONTACTO</th>
+                            <th>INFO TIPO CONTACTO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactos_table">
+                    <?php
+                        foreach ($array_contactos as $key => $value) {
+                            $nombre_contacto = $value['nombre'];
+                            $direccion = $value['direccion'];
+                            $info_tipo_contacto = $value['info_tipo_contacto'];
+                            $id_departamento = $value['id_departamento'];
+                            $nombre_departamento = $value['nombre_departamento'];
+                            $id_municipio = $value['id_municipio'];
+                            $nombre_municipio = $value['nombre_municipio'];
+                            $id_tipo_contacto = $value['id_tipo_contacto'];
+                            $nombre_tipo_contacto = $value['nombre_tipo_contacto'];
+
+                    ?>
+                        <tr class='campo'>
+                            <td class='nombre_contacto'><?php echo $nombre_contacto; ?></td>
+                            <td class='id_departamento_contacto' hidden><?php echo $id_departamento; ?></td>
+                            <td><?php echo $nombre_departamento; ?></td>
+                            <td class='id_municipio_contacto' hidden><?php echo $id_municipio; ?></td>
+                            <td><?php echo $nombre_municipio; ?></td>
+                            <td class='direccion_contacto'><?php echo $direccion; ?></td>
+                            <td class='id_tipo_contacto' hidden><?php echo $id_tipo_contacto; ?></td>
+                            <td><?php echo $nombre_tipo_contacto; ?></td>
+                            <td class='informacion_tipo_contacto'><?php echo $nombre_tipo_contacto; ?></td>
+                        </tr>
+                    <?php
+                        }
+
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <!--- SEPARADOR DIV --->
+        </div>
 	</div>
     <div class="modal-footer">
         <button type='button' class='btn btn-default' data-dismiss='modal'>Cerrar</button>

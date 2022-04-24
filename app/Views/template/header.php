@@ -22,6 +22,7 @@
   <link href="<?php echo base_url("")."/assets" ?>/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo base_url("")."/assets" ?>/css/plugins/fileinput/fileinput.css"/>
   <link rel="stylesheet" href="<?php echo base_url("")."/assets" ?>/css/plugins/timepicker/jquery.timepicker.css"/>
+  <link rel="stylesheet" href="<?php echo base_url("")."/assets" ?>/css/plugins/timepicki/timepicki.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="<?php echo base_url("")."/assets" ?>/css/plugins/perfect-scrollbar/perfect-scrollbar.css">
   <link href="<?php echo base_url("")."/assets" ?>/css/main.css" rel="stylesheet">
   <link href="<?php echo base_url("")."/assets" ?>/css/animate.css" rel="stylesheet">

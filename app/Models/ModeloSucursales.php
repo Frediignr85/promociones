@@ -8,7 +8,15 @@
     {
         protected $table = 'tblsucursal';
         protected $primaryKey = 'id_sucursal';
-        protected $allowedFields = ['nombre','url','telefono','direccion','id_departamento','id_municipio','id_usuario','activo','id_establecimiento'];
+        protected $allowedFields = ['nombre',
+                                    'url',
+                                    'telefono',
+                                    'direccion',
+                                    'id_departamento',
+                                    'id_municipio',
+                                    'id_usuario',
+                                    'activo',
+                                    'id_establecimiento'];
         protected $useSoftDeletes = true;
         protected $useTimestamps = false;
         protected $createdField  = 'created_at';
@@ -21,6 +29,11 @@
             }
             return $this->asArray()
                 ->where('tblsucursal.id_sucursal',$id_sucursal)->findAll();
+        }
+        public function get_sucursales_establecimiento($id_establecimiento){
+            return $this->asArray()
+                    ->where("tblsucursal.id_establecimiento",$id_establecimiento)
+                    ->findAll();
         }
     }
 

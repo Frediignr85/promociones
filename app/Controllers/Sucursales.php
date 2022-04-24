@@ -2,11 +2,13 @@
 
 use App\Controllers\BaseController;
 use App\Models\ModeloCategorias;
+use App\Models\ModeloContactoSucursal;
 use App\Models\ModeloDepartamento;
 use App\Models\ModeloEstablecimientos;
 use App\Models\ModeloMunicipio;
 use App\Models\ModeloPrincipal;
 use App\Models\ModeloSucursales;
+use App\Models\ModeloTipoContacto;
 use App\Models\ModeloUsuarios;
 header('Access-Control-Allow-Origin: *');
 
@@ -22,6 +24,8 @@ class Sucursales extends BaseController{
         $this->modelo_departamento = new ModeloDepartamento();
         $this->modelo_municipio = new ModeloMunicipio();
         $this->modelo_sucursal = new ModeloSucursales();
+        $this->modelo_tipo_contacto = new ModeloTipoContacto();
+        $this->modelo_contacto_sucursal = new ModeloContactoSucursal();
         /* ACA INICIALIZO LA INSTANCIA PARA USAR LAS SESIONES */
         $this->session = session(); 
         /* ACA LLAMO LAS VARIABLES DE SESION */
@@ -67,6 +71,8 @@ class Sucursales extends BaseController{
         $datos2['array_establecimientos'] = $array_establecimientos;
         $array_departamentos = $this->modelo_departamento->get();
         $datos2['array_departamentos'] = $array_departamentos;
+        $array_tipo_contactos = $this->modelo_tipo_contacto->get();
+        $datos2['array_tipo_contactos'] = $array_tipo_contactos;
         /* ACA MANDO A LLAMAR EL MENU */
         $menu = $modelo_principal->menu($this->id_usuario,$this->admin);
         $datos['menu'] = $menu;
@@ -88,6 +94,7 @@ class Sucursales extends BaseController{
         $id_establecimiento = addslashes($this->request->getPost('id_establecimiento'));
         $id_departamento = addslashes($this->request->getPost('id_departamento'));
         $id_municipio = addslashes($this->request->getPost('id_municipio'));
+        $lista = addslashes($this->request->getPost('lista'));
         $id = $this->modelo_sucursal->insert([
             'nombre' => $nombre,
             'url' => $url,
@@ -100,8 +107,39 @@ class Sucursales extends BaseController{
             'activo' =>'1',
         ]);
         if($this->modelo_sucursal->get($id) != null){  
-            $xdatos['typeinfo'] = "Success";
-            $xdatos['msg'] = "Sucursal Registrada con Exito!."; 
+            $this->modelo_contacto_sucursal->eliminar_contactos_sucursal($id);
+            $explora = explode("|", $lista);
+			$c = count($explora);
+            $error = false;
+            for ($i=0; $i < $c-1 ; $i++){
+				$ex = explode("~~", $explora[$i]);
+				$nombre_contacto = $ex[0];
+				$id_departamento_contacto = $ex[1];
+				$id_municipio_contacto = $ex[2];
+				$direccion_contacto = $ex[3];
+				$id_tipo_contacto = $ex[4];
+				$informacion_tipo_contacto = $ex[5];
+				$id_contacto_sucursal = $this->modelo_contacto_sucursal->insert([
+                    'nombre' => $nombre_contacto,
+                    'direccion' => $direccion_contacto,
+                    'info_tipo_contacto' => $informacion_tipo_contacto,
+                    'id_departamento' => $id_departamento_contacto,
+                    'id_municipio' => $id_municipio_contacto,
+                    'id_tipo_contacto' => $id_tipo_contacto,
+                    'id_sucursal' => $id
+                ]);
+				if($this->modelo_contacto_sucursal->get($id_contacto_sucursal) == null){
+                    $error = true;
+                }
+			}
+			if(!$error){
+				$xdatos['typeinfo'] = "Success";
+                $xdatos['msg'] = "Sucursal Registrada con Exito!."; 
+			}	
+			else{
+				$xdatos['typeinfo'] = "Error";
+                $xdatos['msg'] = "No se pudo registrar la Sucursal, intente mas tarde!.";
+			}	
         }
         else{
             $xdatos['typeinfo'] = "Error";
@@ -130,7 +168,11 @@ class Sucursales extends BaseController{
         $datos2['array_municipios'] = $array_municipios;
         $datos2['array_departamentos'] = $array_departamentos;
         $datos2['array_sucursal'] = $array_sucursal;
-        $datos2['id_sucursal'] = $id_sucursal;
+        $datos2['id_sucursal'] = $id_sucursal; 
+        $array_tipo_contactos = $this->modelo_tipo_contacto->get();
+        $datos2['array_tipo_contactos'] = $array_tipo_contactos;       
+        $array_contactos = $this->modelo_contacto_sucursal->traer_contactos_sucursal($id_sucursal);
+        $datos2['array_contactos'] = $array_contactos;
         /*ACA IMPRIMO LAS VISTAS */
         echo view('template/header');
         echo view('template/main_menu',$datos);
@@ -149,6 +191,7 @@ class Sucursales extends BaseController{
         $id_departamento = addslashes($this->request->getPost('id_departamento'));
         $id_municipio = addslashes($this->request->getPost('id_municipio'));
         $id_sucursal = addslashes($this->request->getPost('id_sucursal'));
+        $lista = addslashes($this->request->getPost('lista'));
         $this->modelo_sucursal->update($id_sucursal,[
             'nombre' => $nombre,
             'url' => $url,
@@ -159,8 +202,39 @@ class Sucursales extends BaseController{
             'id_municipio' => $id_municipio,
         ]);
         if($this->modelo_sucursal->get($id_sucursal) != null){
-            $xdatos['typeinfo'] = "Success";
-            $xdatos['msg'] = "Sucursal Editada con Exito!.";
+            $this->modelo_contacto_sucursal->eliminar_contactos_sucursal($id_sucursal);
+            $explora = explode("|", $lista);
+			$c = count($explora);
+            $error = false;
+            for ($i=0; $i < $c-1 ; $i++){
+				$ex = explode("~~", $explora[$i]);
+				$nombre_contacto = $ex[0];
+				$id_departamento_contacto = $ex[1];
+				$id_municipio_contacto = $ex[2];
+				$direccion_contacto = $ex[3];
+				$id_tipo_contacto = $ex[4];
+				$informacion_tipo_contacto = $ex[5];
+				$id_contacto_sucursal = $this->modelo_contacto_sucursal->insert([
+                    'nombre' => $nombre_contacto,
+                    'direccion' => $direccion_contacto,
+                    'info_tipo_contacto' => $informacion_tipo_contacto,
+                    'id_departamento' => $id_departamento_contacto,
+                    'id_municipio' => $id_municipio_contacto,
+                    'id_tipo_contacto' => $id_tipo_contacto,
+                    'id_sucursal' => $id_sucursal
+                ]);
+				if($this->modelo_contacto_sucursal->get($id_contacto_sucursal) == null){
+                    $error = true;
+                }
+			}
+			if(!$error){
+				$xdatos['typeinfo'] = "Success";
+                $xdatos['msg'] = "Sucursal Editada con Exito!."; 
+			}	
+			else{
+				$xdatos['typeinfo'] = "Error";
+                $xdatos['msg'] = "No se pudo editar la Sucursal, intente mas tarde!.";
+			}	
         }
         else{
             $xdatos['typeinfo'] = "Error";
@@ -183,7 +257,11 @@ class Sucursales extends BaseController{
         $datos2['array_municipios'] = $array_municipios;
         $datos2['array_departamentos'] = $array_departamentos;
         $datos2['array_sucursal'] = $array_sucursal;
-        $datos2['id_sucursal'] = $id_sucursal;
+        $datos2['id_sucursal'] = $id_sucursal; 
+        $array_tipo_contactos = $this->modelo_tipo_contacto->get();
+        $datos2['array_tipo_contactos'] = $array_tipo_contactos;       
+        $array_contactos = $this->modelo_contacto_sucursal->traer_contactos_sucursal($id_sucursal);
+        $datos2['array_contactos'] = $array_contactos;
         echo view('sucursales/ver_sucursal',$datos2); 
     }
 

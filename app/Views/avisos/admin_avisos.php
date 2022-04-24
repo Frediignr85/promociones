@@ -8,7 +8,7 @@
                 <div class="ibox-content">
                     <!--load datables estructure html-->
                     <header>
-                        <h4>Administrar Avisos</h4>
+                        <h4>Administrar Establecimientos</h4>
                     </header>
                     <section>
                         <div class="table-responsive">
@@ -17,8 +17,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
-                                    <th>Descripcion</th>
-                                    <th>Tipo</th>
+                                    <th>Encargado</th>
+                                    <th>Categoria</th>
                                     <th>Estado</th>
                                     <th>Accion</th>
                                 </tr>
