@@ -257,7 +257,10 @@ function generar2() {
             { data: 'nombre_usuario' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 9 }
+        ],
     });
 }
 

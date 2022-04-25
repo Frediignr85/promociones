@@ -202,6 +202,9 @@ function generar2() {
             { data: 'nombre_categoria' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 5 }
+        ],
     });
 }

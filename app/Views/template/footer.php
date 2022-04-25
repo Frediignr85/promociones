@@ -1,6 +1,4 @@
-<div class="footer">
-  <strong>Copyright</strong> <a href="https://web-uis.com/"  target="_blank">Your Ideal Solution</a> &copy; <?php echo date("Y");?>
-</div>
+
 </div>
 </div>
 <!-- Mainly scripts -->

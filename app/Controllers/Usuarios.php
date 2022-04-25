@@ -402,7 +402,7 @@ class Usuarios extends BaseController{
             $usuario = $record['usuario'];
             $correo = $record['correo'];
             $nombre = $record['nombre'];
-            $administrador = $record['admin'];
+            $admin = $record['admin'];
             $activo = $record['activo'];
             $tipo_usuario = $record['tipo_usuario'];
             $label_admin = "";
@@ -453,7 +453,7 @@ class Usuarios extends BaseController{
                     $label_activo = "<span class=\"label label-danger\">Inactivo</span>";
                 }
             }
-            if($administrador){
+            if($admin){
                 $label_admin = "<span class=\"label label-info\">Si</span>";
             }
             else{
@@ -467,7 +467,7 @@ class Usuarios extends BaseController{
                 "usuario"=>$usuario,
                 "nombre"=>$nombre,
                 "correo"=>$correo,
-                "label_admin"=>$label_admin,
+                "admin"=>$label_admin,
                 "tipo_usuario"=>$tipo_usuario,
                 "activo"=>$label_activo,
                 "boton" => $menudrop

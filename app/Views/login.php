@@ -41,6 +41,8 @@
                         }
                     ?>
                     <input type="button" id="btn_login_ingresar" name="btn_login_ingresar" value="Login" class="btn-login solid" />
+                    <p class="social-text">¿O has olvivado tu contraseña?</p>
+					<a href="recuperar">Recuperar Contraseña</a>
                 </form>
                 
             </div>
@@ -49,7 +51,7 @@
         <div class="panels-container">
             <div class="panel left-panel">
                 <div class="content">
-                    <h3>Bienvenido a tu Sistema de Ventas!</h3>
+                    <h3>Bienvenido a tu Sistema de Administracion de Promociones!</h3>
                 </div>
                 <img src="<?php echo base_url("/assets/images/log.svg") ?>" class="image" alt="" />
             </div>

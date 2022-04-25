@@ -254,10 +254,13 @@ function generar2() {
             { data: 'usuario' },
             { data: 'nombre' },
             { data: 'correo' },
-            { data: 'label_admin' },
+            { data: 'admin' },
             { data: 'tipo_usuario' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 7 }
+        ],
     });
 }

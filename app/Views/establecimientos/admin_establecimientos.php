@@ -17,7 +17,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
-                                    <th>Descripcion</th>
+                                    <th>Encargado</th>
                                     <th>Tipo</th>
                                     <th>Estado</th>
                                     <th>Accion</th>

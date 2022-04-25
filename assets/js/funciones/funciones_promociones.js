@@ -76,8 +76,7 @@ function senddata() {
     var id_sucursal = $("#id_sucursal").val();
     let error = false;
     let msg = "";
-
-    if ((fecha_inicio > fecha_fin) || (fecha_inicio == fecha_fin && hora_inicio >= hora_fin)) {
+    if ((fecha_inicio > fecha_fin) || (fecha_inicio == fecha_fin && convertTime12to24(hora_inicio) > convertTime12to24(hora_fin))) {
         error = true;
         msg = "Comprobar que las fechas y las horas tengan concordancia!";
     }
@@ -117,6 +116,21 @@ function senddata() {
     } else {
         display_notify("Warning", msg);
     }
+}
+const convertTime12to24 = (time12h) => {
+    const [time, modifier] = time12h.split(' ');
+
+    let [hours, minutes] = time.split(':');
+
+    if (hours === '12') {
+        hours = '00';
+    }
+
+    if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+    }
+
+    return `${hours}:${minutes}`;
 }
 
 function reload1() {
@@ -256,7 +270,10 @@ function generar2() {
             { data: 'nombre_tipo_promocion' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 9 }
+        ],
     });
 }
 

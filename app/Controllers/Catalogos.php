@@ -1090,44 +1090,53 @@ class Catalogos extends BaseController{
     {
         helper(['form', 'url']);
         $db = \Config\Database::connect();
-        $validated2 = $this->validate([
-            'file' => [
-                'uploaded[file]',
-                'mime_in[file,image/jpg,image/jpeg,image/gif,image/png]',
-                'max_size[file,4096]',
-            ],
-        ]);
-        if ($validated2) {
-            $avatar2 = $this->request->getFile('file2');
-            $avatar2->move('./assets/img/banner');
-            if(file_exists("./assets/img/banner/".$avatar2->getClientName())){
-                $antiguo_nombre2 = "./assets/img/banner/".$avatar2->getClientName();
-                $id_unico2 = uniqid();
-                $nuevo_nombre2 = "./assets/img/banner/".$id_unico2.$avatar2->getClientName();
-                $url2 = "img/banner/".$id_unico2.$avatar2->getClientName();
-                rename($antiguo_nombre2, $nuevo_nombre2);
+        try {
+            $validated2 = $this->validate([
+                'file' => [
+                    'uploaded[file]',
+                    'mime_in[file,image/jpg,image/jpeg,image/gif,image/png]',
+                    'max_size[file,4096]',
+                ],
+            ]);
+            if ($validated2) {
+                $avatar2 = $this->request->getFile('file2');
+                $avatar2->move('./assets/img/banner');
+                if(file_exists("./assets/img/banner/".$avatar2->getClientName())){
+                    $antiguo_nombre2 = "./assets/img/banner/".$avatar2->getClientName();
+                    $id_unico2 = uniqid();
+                    $nuevo_nombre2 = "./assets/img/banner/".$id_unico2.$avatar2->getClientName();
+                    $url2 = "img/banner/".$id_unico2.$avatar2->getClientName();
+                    rename($antiguo_nombre2, $nuevo_nombre2);
+                }
+                $query3 = $db->query('UPDATE tblcategoria SET imagen_banner = \''.$url2.'\' WHERE tblcategoria.id_categoria = \''.$this->session->get('id_categoria').'\'');
             }
-            $query3 = $db->query('UPDATE tblcategoria SET imagen_banner = \''.$url2.'\' WHERE tblcategoria.id_categoria = \''.$this->session->get('id_categoria').'\'');
+        } catch (\Throwable $th) {
+            //throw $th;
         }
-        $validated = $this->validate([
-            'file' => [
-                'uploaded[file]',
-                'mime_in[file,image/jpg,image/jpeg,image/gif,image/png]',
-                'max_size[file,4096]',
-            ],
-        ]);
-        if ($validated) {
-            $avatar = $this->request->getFile('file');
-            $avatar->move('./assets/img/perfil');
-            if(file_exists("./assets/img/perfil/".$avatar->getClientName())){
-                $antiguo_nombre = "./assets/img/perfil/".$avatar->getClientName();
-                $id_unico = uniqid();
-                $nuevo_nombre = "./assets/img/perfil/".$id_unico.$avatar->getClientName();
-                $url = "img/perfil/".$id_unico.$avatar->getClientName();
-                rename($antiguo_nombre, $nuevo_nombre);
+        
+        try {
+            $validated = $this->validate([
+                'file' => [
+                    'uploaded[file]',
+                    'mime_in[file,image/jpg,image/jpeg,image/gif,image/png]',
+                    'max_size[file,4096]',
+                ],
+            ]);
+            if ($validated) {
+                $avatar = $this->request->getFile('file');
+                $avatar->move('./assets/img/perfil');
+                if(file_exists("./assets/img/perfil/".$avatar->getClientName())){
+                    $antiguo_nombre = "./assets/img/perfil/".$avatar->getClientName();
+                    $id_unico = uniqid();
+                    $nuevo_nombre = "./assets/img/perfil/".$id_unico.$avatar->getClientName();
+                    $url = "img/perfil/".$id_unico.$avatar->getClientName();
+                    rename($antiguo_nombre, $nuevo_nombre);
+                }
+                //echo 'UPDATE tblcategoria SET imagen_logo = \''.$url.'\' WHERE tblcategoria.id_categoria = \''.$this->session->get('id_categoria').'\'';
+                $query2 = $db->query('UPDATE tblcategoria SET imagen_logo = \''.$url.'\' WHERE tblcategoria.id_categoria = \''.$this->session->get('id_categoria').'\'');
             }
-            //echo 'UPDATE tblcategoria SET imagen_logo = \''.$url.'\' WHERE tblcategoria.id_categoria = \''.$this->session->get('id_categoria').'\'';
-            $query2 = $db->query('UPDATE tblcategoria SET imagen_logo = \''.$url.'\' WHERE tblcategoria.id_categoria = \''.$this->session->get('id_categoria').'\'');
+        } catch (\Throwable $th) {
+            //throw $th;
         }
        
         sleep(3);

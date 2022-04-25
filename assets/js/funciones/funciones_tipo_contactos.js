@@ -193,6 +193,9 @@ function generar2() {
             { data: 'descripcion' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 4 }
+        ],
     });
 }

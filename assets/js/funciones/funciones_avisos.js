@@ -199,6 +199,9 @@ function generar2() {
             { data: 'nombre_tipo_aviso' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 5 }
+        ],
     });
 }

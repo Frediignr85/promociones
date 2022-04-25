@@ -200,6 +200,9 @@ function generar2() {
             { data: 'color' },
             { data: 'activo' },
             { data: 'boton' },
-        ]
+        ],
+        columnDefs: [
+            { orderable: false, targets: 5 }
+        ],
     });
 }
