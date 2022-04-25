@@ -28,7 +28,52 @@ class Dashboard extends BaseController{
         $datos3['url'] = '<script src="'.base_url("").'/assets/js/funciones/funciones_dashboard.js" ></script>';
         echo view('template/footer',$datos3);
     }
-
+    function grafica1(){
+        $db = \Config\Database::connect();
+        $data = array();
+        $sql = "SELECT tblsucursal.id_sucursal, tblsucursal.nombre, COUNT(tblpromocion.id_promocion) as total
+        from tblsucursal
+        inner join tblpromocion on tblpromocion.id_sucursal = tblsucursal.id_sucursal 
+        where tblsucursal.deleted_at is null
+        group by tblsucursal.id_sucursal, tblsucursal.nombre 
+        order by total desc
+        limit 6";
+        $datax = $db->query($sql);
+        $array_data = $datax->getResultArray();
+        $data = array();
+        foreach ($array_data as $key => $value) {
+            $nombre = $value['nombre'];
+            $total = $value['total'];
+            $data[] = array(
+                "total" => $total,  
+                "producto" => $nombre, 
+            );
+        }
+        echo json_encode($data);
+    }
+    function grafica2(){
+        $db = \Config\Database::connect();
+        $data = array();
+        $sql = "SELECT tblestablecimiento.id_establecimiento, tblestablecimiento.nombre, COUNT(tblpromocion.id_promocion) as total
+        from tblestablecimiento
+        inner join tblpromocion on tblpromocion.id_establecimiento = tblestablecimiento.id_establecimiento 
+        where tblestablecimiento.deleted_at is null
+        group by tblestablecimiento.id_establecimiento, tblestablecimiento.nombre 
+        order by total desc
+        limit 6";
+        $datax = $db->query($sql);
+        $array_data = $datax->getResultArray();
+        $data = array();
+        foreach ($array_data as $key => $value) {
+            $nombre = $value['nombre'];
+            $total = $value['total'];
+            $data[] = array(
+                "total" => $total,  
+                "producto" => $nombre, 
+            );
+        }
+        echo json_encode($data);
+    }
 
 
 }

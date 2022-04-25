@@ -1,149 +1,63 @@
-$(document).ready(function(){
-    
+$(document).ready(function() {
     grafica1();
     grafica2();
+    //grafica3();
+    //grafica4();
 });
-function grafica()
-{
+
+function grafica1() {
+    let base_url = $("#base_url").val();
     $.ajax({
-    url: "grafica.php",
-    method: "POST",
-    success: function(data)
-    {
-        var mes = [];
-        var total = [];
-        var obj = jQuery.parseJSON(data);
-
-        for(var j in obj)
-        {
-            mes.push(obj[j].mes);
-            total.push(obj[j].total);
-        }
-
-        var chartdata =
-        {
-            labels: mes,
-            datasets : [
-                {
-                   label: 'Servicio por Empleado',
-                   backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(95, 172, 136, 0.2)',
-                        'rgba(95, 105, 136, 0.2)',
-                        'rgba(255, 57, 218, 0.2)',
-                        'rgba(0, 255, 0, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(95, 172, 136, 1)',
-                        'rgba(95, 105, 136, 1)',
-                        'rgba(255, 57, 218, 1)',
-                        'rgba(0, 255, 0, 1)'
-                    ],
-                    //backgroundColor:'rgba(54, 162, 235, 0.2)',
-                    //borderColor:'rgba(54, 162, 235, 1)',
-                    borderWidth: 1.2,
-                    data: total,
-                }
-            ]
-        };
-
-            var ctx = $("#myChart");
-
-            var barGraph = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: chartdata,
-                options: {
+        url: base_url + "/dashboard/grafica1",
+        method: "POST",
+        success: function(data) {
+            var producto = [];
+            var total = [];
+            var obj = jQuery.parseJSON(data);
+            var sales = [];
+            for (var i in obj) {
+                producto.push(obj[i].producto);
+                total.push(obj[i].total);
+                var json = { "name": (obj[i].producto), "data": [parseFloat(obj[i].total)] }
+                sales.push(json);
+            }
+            Highcharts.chart('container1', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'TOTAL DE PROMOCIONES POR SUCURSAL'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true
+                    }
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
                     title: {
-                        display: true,
-                        text: 'SERVICIO'
-                        },
-                     responsive: true,
-                    },
-            });
-        },
-        error: function(data) {
-            console.log(data);
-        }
-    });
-}
-function grafica1()
-{
-	$.ajax({
-    url: "grafica1.php",
-    method: "POST",
-    success: function(data)
-    {
-        var mes = [];
-        var total = [];
-        var obj = jQuery.parseJSON(data);
-
-        for(var i in obj)
-        {
-            mes.push(obj[i].mes);
-            total.push(obj[i].total);
-        }
-
-        var chartdata =
-        {
-            labels: mes,
-            datasets : [
-                {
-                   label: 'UNIDADES VENDIDAS',
-                   backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(95, 172, 136, 0.2)',
-                        'rgba(95, 105, 136, 0.2)',
-                        'rgba(255, 57, 218, 0.2)',
-                        'rgba(0, 255, 0, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(95, 172, 136, 1)',
-                        'rgba(95, 105, 136, 1)',
-                        'rgba(255, 57, 218, 1)',
-                        'rgba(0, 255, 0, 1)'
-                    ],
-                    //backgroundColor:'rgba(54, 162, 235, 0.2)',
-                    //borderColor:'rgba(54, 162, 235, 1)',
-                    borderWidth: 1.2,
-                    data: total,
-                }
-            ]
-        };
-
-            var ctx = $("#myChart1");
-
-            var barGraph = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: chartdata,
-                options: {
-                    title: {
-                        display: true,
-                        text: 'CPRODUCTOS MÁS VENDIDOS'
-                        },
-                     responsive: true,
-                    },
+                        text: 'TOTAL DE PROMOCIONES'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.1f}'
+                        }
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f} </b> PROMOCIONESL<br/>'
+                },
+                series: sales,
             });
         },
         error: function(data) {
@@ -152,76 +66,69 @@ function grafica1()
     });
 }
 
-function grafica2()
-{
+function grafica2() {
+    let base_url = $("#base_url").val();
     $.ajax({
-    url: "grafica2.php",
-    method: "POST",
-    success: function(data)
-    {
-        var mes = [];
-        var total = [];
-        var obj = jQuery.parseJSON(data);
-
-        for(var i in obj)
-        {
-            mes.push(obj[i].mes);
-            total.push(obj[i].total);
-        }
-
-        var chartdata =
-        {
-            labels: mes,
-            datasets : [
-                {
-                   label: 'TOTAL VENTAS',
-                   backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(95, 172, 136, 0.2)',
-                        'rgba(95, 105, 136, 0.2)',
-                        'rgba(255, 57, 218, 0.2)',
-                        'rgba(0, 255, 0, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(95, 172, 136, 1)',
-                        'rgba(95, 105, 136, 1)',
-                        'rgba(255, 57, 218, 1)',
-                        'rgba(0, 255, 0, 1)'
-                    ],
-                    //backgroundColor:'rgba(54, 162, 235, 0.2)',
-                    //borderColor:'rgba(54, 162, 235, 1)',
-                    borderWidth: 1.2,
-                    data: total,
-                }
-            ]
-        };
-
-            var ctx = $("#myChart2");
-            var barGraph = new Chart(ctx, {
-                type: 'bar',
-                data: chartdata,
-                options: {
+        url: base_url + "/dashboard/grafica2",
+        method: "POST",
+        success: function(data) {
+            var producto = [];
+            var total = [];
+            var obj = jQuery.parseJSON(data);
+            var sales = [];
+            for (var i in obj) {
+                producto.push(obj[i].producto);
+                total.push(obj[i].total);
+                var json = { "name": (obj[i].producto), "data": [parseFloat(obj[i].total)] }
+                sales.push(json);
+            }
+            Highcharts.chart('container2', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'PROMOCIONES HECHAS POR ESTABLECIMIENTOS'
+                },
+                accessibility: {
+                    announceNewData: {
+                        enabled: true
+                    }
+                },
+                xAxis: {
+                    categories: producto,
+                },
+                yAxis: {
                     title: {
-                        display: true,
-                        text: 'VENTAS POR MES'
-                        },
-                     responsive: true,
-                    },
+                        text: 'ESTABLECIMIENTOS'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.1f}'
+                        }
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> DE PROMOCIONES<br/>'
+                },
+                series: sales,
             });
         },
         error: function(data) {
             console.log(data);
         }
     });
+}
+
+
+function reload1() {
+    let base_url = $("#base_url").val();
+    location.href = base_url + '/dashboard';
 }
